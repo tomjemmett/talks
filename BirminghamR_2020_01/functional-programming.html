@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Functional Programming with Purrr</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="[Tom Jemmett][email] | Senior Healthcare Analyst | [The Strategy Unit][su]" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="su_xaringan.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Functional Programming with Purrr
+### <strong>[Tom Jemmett][email]</strong> | Senior Healthcare Analyst | <em>[The Strategy Unit][su]</em>
+### Midlands and Lancashire Commissioning Support Unit
+
+---
+
+class: inverse
+
+
+
+## Purrr
+
+Purrr is a package that aims to provide "A complete and consistent functional
+programming toolkit for R."
+
+Functional Programming is a [Declarative Programming Paradigm][1] that treats
+computation as the evaluation of [Mathematical Functions][2].
+
+From a [Mango blog post][6]
+
+&gt; FP is the process of writing code in a structured way and through functions
+&gt; remove code duplications and redundancies. In effect, computations or 
+&gt; evaluations are treated as mathematical functions and the output of a function
+&gt; only depends on the values of its inputs – known as arguments. FP ensures that
+&gt; any side-effects such as changes in state do not affect the expected output
+&gt; such that if you call the same function twice with the same arguments the
+&gt; function returns the same output.
+
+
+As of version 0.3.3 there are some 177 functions exported by purrr!
+
+Fortunately, most of these functions are variants of one another, and some 65 of
+these functions all fall under the same family of "map" functions.
+
+---
+class: inverse
+
+## map
+
+.pull-left[
+map is a function that takes a vector (or list) and another function for which
+each item from the input vector (or list) is evaluated against.
+
+
+```r
+map &lt;- function(.x, .f, ...)
+```
+
+map returns a list - but you can use the map_ variants if you want to return
+a specific type of data as a vector:
+
+* map_chr for a character vector
+* map_dbl for a numeric vector
+* map_lgl for a logical (`TRUE`/`FALSE`) vector
+* map_int for an integer vector
+* map_raw for a raw rector
+* map_dfr if your function returns dataframes and you want to bind by rows (rbind)
+* map_dfc if your function returns dataframes and you want to bind by columns (cbind)
+]
+
+.pull-right[
+![from Advanced R](map-arg.png)
+source: [Wickham, H. (2020). 9 Functionals | Advanced R.][3]
+
+map is very similar to the apply family of functions in Base R, but provide a
+much simpler and more consistent programming interface.
+]
+---
+class: inverse
+
+## simple map examples
+
+.pull-left[
+Let's say we have a function
+
+```r
+fn &lt;- function(x, a) { x^2 + a }
+```
+
+We can use map to iterate over the numbers from 1 to 5 and return the results as
+a list.
+
+
+```r
+map(1:5, fn, 3)
+```
+
+```
+## [[1]]
+## [1] 4
+## 
+## [[2]]
+## [1] 7
+## 
+## [[3]]
+## [1] 12
+## 
+## [[4]]
+## [1] 19
+## 
+## [[5]]
+## [1] 28
+```
+]
+.pull-right[
+If we want to simplify the results, we can use the map_dbl function, which will
+give us the results as a numeric vector.
+
+We can also define functions inside of map. We can either write out the full
+function syntax, or we can use a formula syntax like:
+
+
+```r
+map_dbl(1:5, ~.x^2 + 3)
+```
+
+```
+## [1]  4  7 12 19 28
+```
+
+in the formula syntax the argument is called `.x`.
+
+.small[
+of course, if your function is vectorised you could just call `fn(1:5, 3)`...
+]
+]
+
+---
+class: inverse
+
+## reading in csv's from a folder
+
+
+```r
+files &lt;- dir("data/ae_attendances/",
+             "^\\d{4}-\\d{2}-\\d{2}.csv$",
+             full.names = TRUE)
+# set the name of each item in the vector to be the date part of the file
+names(files) &lt;- files %&gt;% str_extract("\\d{4}-\\d{2}-\\d{2}.csv")
+# map over the list of files, read each csv, add a column called "file" with the
+# value of the name of the item.
+ae_attendances &lt;- map_dfr(files, read_csv, col_types = "Dccddd", .id = "file")
+
+ae_attendances %&gt;%
+  head(5) %&gt;%
+  knitr::kable(format="html")
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; file &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; period &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; org_code &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; type &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; attendances &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; breaches &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; admissions &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016-04-01.csv &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2016-04-01 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; RF4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18788 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4082 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4074 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016-04-01.csv &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2016-04-01 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; RF4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 561 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016-04-01.csv &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2016-04-01 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; RF4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; other &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2685 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016-04-01.csv &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2016-04-01 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; R1H &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27396 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5099 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6424 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016-04-01.csv &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2016-04-01 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; R1H &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 700 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+class: inverse
+
+## map2: map over two lists
+
+.pull-left[
+Let's generate a table with random binomially distributed values:
+
+
+```r
+df &lt;- tibble(i = 1:20) %&gt;%
+  mutate(N = rpois(max(i), 100)) %&gt;%
+  mutate(p = map_dbl(N, rbinom,
+                     n = 1, prob = 0.75))
+
+df %&gt;%
+  head(5) %&gt;%
+  knitr::kable(format = "html")
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; i &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; N &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 111 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 82 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 77 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 110 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 69 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 110 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 82 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+.pull-right[
+we can use `map2` to iterate over the pairs of numbers in the `N` and `p`
+columns, and use the `BinomCI` function (from `DescTools`) to calculate
+confidence intervals.
+
+
+```r
+df %&gt;%
+  mutate(confint = map2(p, N, BinomCI) %&gt;%
+           map(as_tibble)) %&gt;%
+  unnest(cols = "confint") %&gt;%
+  head(5) %&gt;%
+  knitr::kable(format = "html")
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; i &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; N &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; est &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; lwr.ci &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; upr.ci &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 111 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 82 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7387387 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6500078 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8114980 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 77 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8555556 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7684012 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9136001 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 110 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7090909 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6183066 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7857642 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 69 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7666667 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6694829 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8420181 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 110 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 82 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7454545 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6567258 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8176181 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+---
+class: inverse
+
+## Other map functions
+
+.pull-left[
+#### pmap
+
+If you have more than 2 items you need to map over, then you want pmap:
+
+Your input must be a list, and each item in the list must contain the same
+number of items.
+
+
+```r
+list(x = 1:3, y = 4:6, z = 7:9) %&gt;%
+  pmap_dbl(function(x, y, z) x^y+z)
+```
+
+```
+## [1]   8  40 738
+```
+
+If you pass in a dataframe then it will run a function for each row.
+
+The functions arguments need to match the name of the items in the list/columns
+in the dataframe rather than by position.
+]
+
+.pull-right[
+#### imap
+
+imap works just like map, except it adds an "index" value, so your function call
+will be function(.x, .i).
+
+#### walk
+
+walk/walk2/pwalk/iwalk works calls the function for it's side effects, but it
+returns it's original input. Useful for things like calling `rmarkdown::render`.
+
+#### modify
+
+For when your output is going to be the same type as your input. Can be  awkward
+as some functions subtly change the data type (e.g. integers cast to numerics).
+]
+
+---
+class: inverse
+
+## Other useful functions from purrr
+
+.pull-left[
+#### Composing multiple functions together
+
+You can chain multiple map's together, for example:
+
+
+```r
+1:5 %&gt;%
+  map_dbl(~.x^2) %&gt;%
+  map_dbl(~.x+3)
+```
+
+```
+## [1]  4  7 12 19 28
+```
+
+the compose function allows us to combine functions together.
+
+
+```r
+map_dbl(1:5, compose(~.x^2, ~.x+3,
+                     .dir="forward"))
+```
+
+```
+## [1]  4  7 12 19 28
+```
+
+by default, compose works backwards, like the mathematical "dot" composition,
+you can change this by setting `.dir="forward"`.
+]
+.pull-right[
+#### Partial application
+
+We can partially apply functions arguments to create a new, simpler function.
+
+
+```r
+mean_na &lt;- partial(mean, na.rm = TRUE)
+mean_na(c(1:5, NA))
+```
+
+```
+## [1] 3
+```
+
+a good example of when partial can be useful is when used in combination with
+compose: if we want to pass additional arguments to the second or 3 function in
+the chain, then we will need to set these arguments with `partial` during the
+`compose` call
+
+
+```r
+compose(function_1,
+        partial(function_2, arg = value),
+        function_3)
+```
+]
+---
+class: inverse
+
+## Using map to calculate confidence intervals in a tibble
+
+.pull-left[
+Below we take the `ae_attendances` data and sum to get just the monthly
+performance values. We use the `BinomCI` function from the `DescTools` package
+to calculate the percentage of attendances that "breached" the 4 hour target,
+along with the 95% confidence intervals.
+
+We wouldn't normally be able to call this function inside a tidy pipe because
+it's expecting a single value for the `x` and `n` arguments. Using map2 we run
+the function once for each pair of values. We compose with as_tibble to
+convert the results into a table - this helps us in the next step to unnest this
+column.
+]
+.pull-right[
+
+```r
+ae_attendances %&gt;%
+  group_by(period) %&gt;%
+  summarise_at(vars(attendances, breaches),
+               sum) %&gt;%
+  mutate(ci = map2(breaches,
+                   attendances,
+                   compose(as_tibble,
+                           BinomCI))) %&gt;%
+  unnest(cols = c(ci)) %&gt;%
+  select_if(negate(is.list)) %&gt;%
+  mutate_at(vars(est:upr.ci), ~1-.x) %&gt;%
+  select(period, est, lwr.ci, upr.ci) %&gt;%
+  head(3) %&gt;%
+  knitr::kable(format = "html")
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; period &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; est &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; lwr.ci &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; upr.ci &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016-04-01 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9003513 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9007800 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8999209 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016-05-01 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9027556 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9031584 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9023512 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016-06-01 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9055994 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9060081 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9051892 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+---
+class: inverse
+
+## Further Reading
+
+* [Advanced R][3] contains an excellent section on Functional Programming
+* [R4DS][4] functions section is well worth reading also if you haven't created
+ many of your own functions
+* [Herding Cats with List Columns and Purrr][5] shows some more advanced use
+ cases for using purrr 
+* [To Purrr or not to purrr][6] goes into a bit more detail about why you should
+ care about functional programming
+* [furrr][7] is a package that provides future-compatible versions of the map
+ functions that allow you to quickly parallelise your code
+
+.right[
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;
+## Contact Me
+
+Twitter: [@tom_jemmett][twitter]
+
+Email: [thomas.jemmett@nhs.net][email]
+
+BirminghamR Slack: @Tom Jemmett
+
+]
+
+[email]:mailto:thomas.jemmett@nhs.net
+[su]:https://www.strategyunitwm.nhs.uk/
+[twitter]:https://twitter.com/tom_jemmett
+
+[1]:https://en.wikipedia.org/wiki/Declarative_programming
+[2]:https://en.wikipedia.org/wiki/Function_(mathematics)
+[3]:https://adv-r.hadley.nz/functionals.html
+[4]:https://r4ds.had.co.nz/functions.html
+[5]:http://www.josephtpowers.com/post/herding-cats-with-list-columns-and-purrr/
+[6]:https://www.mango-solutions.com/to-purrr-or-not-to-purrr/
+[7]:https://github.com/DavisVaughan/furrr
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
