@@ -1,0 +1,53 @@
+library(tidyverse)
+library(NHSRdatasets)
+library(patchwork) # devtools::install_github("thomasp85/patchwork")
+
+n_months <- n_distinct(ae_attendances$period)
+
+df <- ae_attendances %>%
+  group_by(org_code) %>%
+  filter(sum(type == 1) == n_months) %>%
+  group_by(period, add = TRUE) %>%
+  summarise_if(is.numeric, sum) %>%
+  mutate(admission_rate = admissions/attendances,
+         performance = 1-breaches/attendances) %>%
+  nest()
+
+df
+
+# get a sample of the data frame
+df.x <- df[1,]$data[[1]]
+
+fns <- list()
+
+fns$plot_attendances <- function(data) {
+  ggplot(data, aes(period, attendances)) +
+    geom_line() +
+    geom_point()
+}
+
+fns$plot_breaches <- function(data) {
+  ggplot(data, aes(period, breaches)) +
+    geom_line() +
+    geom_point()
+}
+
+fns$plot_admission_rate <- function(data) {
+  ggplot(data, aes(period, admission_rate)) +
+    geom_line() +
+    geom_point()
+}
+
+fns$plot_performance <- function(data) {
+  ggplot(data, aes(period, performance)) +
+    geom_hline(yintercept = 0.95, linetype = "dashed", colour = "red") +
+    geom_line() +
+    geom_point()
+}
+
+df %>%
+  head(2) %>%
+  pmap(~map(fns, exec, ..2) %>%
+         reduce(`+`) +
+         plot_layout(2) +
+         plot_annotation(..1))

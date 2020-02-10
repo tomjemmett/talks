@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1572959964585.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1552068974",
+    "id" : "4C1BA912",
+    "lastKnownWriteTime" : 1572816336,
+    "last_content_update" : 1572816336,
+    "path" : "~/R/Functional_Programming_Workshop/Solution_14.R",
+    "project_path" : "Solution_14.R",
+    "properties" : {
+        "cursorPosition" : "7,14",
+        "scrollLine" : "0",
+        "tempName" : "Untitled13"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
