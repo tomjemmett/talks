@@ -1,0 +1,18 @@
+---
+title: "Talks"
+author: "Tom Jemmett"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Below are a list of the talks that I have given:
+
+```{r, echo=FALSE, results="asis"}
+fs::dir_ls(regexp = "(?<!index)\\.Rmd$", perl = TRUE) |>
+  stringr::str_replace("\\.Rmd$", "") |>
+  purrr::map_chr(\(.x) paste0("- [", .x, "](", .x, ".html)")) |>
+  cat(collapse = "\n")
+```
