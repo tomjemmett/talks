@@ -79,7 +79,7 @@ histories are just as varied.
 Our staff are NHS employees, animated by NHS values. The Strategy Unit covers all its costs through project funding.
 But this is driven by need, not what we can sell. Any surplus is recycled for public benefit.
 
-@strategy_unit [`r ic$de`][su_web] / [`r ic$em`][su_email] / [`r ic$tw`][su_twitter] / [`r ic$gh`][su_github] /
+[`r ic$de`][su_web] | [`r ic$em`][su_email] | [`r ic$tw`][su_twitter] | [`r ic$gh`][su_github] |
 [`r ic$li`][su_linkedin]
 ]
 
@@ -88,7 +88,7 @@ But this is driven by need, not what we can sell. Any surplus is recycled for pu
 
 *Senior Healthcare Analyst*
 
-`r ic$em` [thomas.jemmett@nhs.net][tj_email]
+[thomas.jemmett@nhs.net][tj_email]
 
 - 10+ years experience within the NHS as a data analyst
 - BSc Computer Science and Pure Mathematics ([Open University][open_uni])
@@ -96,8 +96,16 @@ But this is driven by need, not what we can sell. Any surplus is recycled for pu
 - Active member of NHS-R community
 - Senior Fellow of NHS-R academy
 - [AphA][apha] member, West Midlands branch champion
-- @tomjemmett [`r ic$tw`][tj_twitter] / [`r ic$gh`][tj_github] / [`r ic$li`][tj_linkedin]
+
+[`r ic$em`][tj_email] | [`r ic$tw`][tj_twitter] | [`r ic$gh`][tj_github] | [`r ic$li`][tj_linkedin]
 ]
+
+---
+class: middle, center
+
+# What is Object Orientated Programming?
+
+Let's have a look at a specific example, the `summary()` function.
 
 ---
 
@@ -256,8 +264,8 @@ The big ones that you will no doubt be using day after day are:
 - `c()`
 - `plot()`
 - `print()` (called any time you type a variable into the console in R<sup>1</sup>)
-- `ggplot`
-- most of the `{dplyr}` verbs (e.g. `mutate`, `select`, `filter`)
+- `ggplot()`
+- most of the `{dplyr}` verbs (e.g. `mutate()`, `select()`, `filter()`)
 
 .footnote[
 [1] (sort of)
@@ -358,6 +366,9 @@ class: middle, center
 # Thanks! Enjoy the rest of the conference!
 ## join the [NHS-R slack][nhsr-slack]
 
+Extra special thanks to Silvia Canelón ([@spcanelon](https://twitter.com/spcanelon)) for building the `{xaringan}` theme
+for the [`{NHSRtheme}`][nhsrtheme] package.
+
 <!-- urls etc. -->
 [tj_email]: mailto:thomas.jemmett@nhs.net
 [tj_twitter]: https://twitter.com/tomjemmett
@@ -377,3 +388,5 @@ class: middle, center
 
 [advr-oop]: https://adv-r.hadley.nz/oo.html
 [nhsr-slack]: https://join.slack.com/t/nhsrcommunity/shared_invite/zt-arabo68y-_Uv5uU2dmtfe8mk5ing9Fg
+
+[nhsrtheme]: https://github.com/nhs-r-community/NHSRtheme
