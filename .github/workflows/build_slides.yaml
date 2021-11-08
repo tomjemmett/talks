@@ -15,7 +15,7 @@ jobs:
 
       - name: install libcurl-dev
         run: |
-          apt install -y libcurl-dev
+          sudo apt install -y libcurl-dev
 
       - uses: r-lib/actions/setup-pandoc@v1
 
