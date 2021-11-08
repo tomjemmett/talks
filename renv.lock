@@ -61,8 +61,14 @@
     "NHSRtheme": {
       "Package": "NHSRtheme",
       "Version": "0.1.0",
-      "Source": "unknown",
-      "Hash": "965c385ea04d3b62798e1d526336038f"
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "nhs-r-community",
+      "RemoteRepo": "NHSRtheme",
+      "RemoteRef": "main",
+      "RemoteSha": "e4776f0b711fbb1c6d425a0e1c1c2dbb585fce1d",
+      "Hash": "c4fbb100895b08a12a75e09d566aeb45"
     },
     "R6": {
       "Package": "R6",
