@@ -278,7 +278,7 @@ It's also possible to create new generic functions. First, create the "generic" 
 
 ``` r
 my_generic <- function(x, ...)
-  UseMethod("my_new_generic")
+  UseMethod("my_generic")
 ```
 
 Then, create implementations of this generic for the different types of data you want to support.
@@ -309,11 +309,11 @@ my_data <- structure(
 )
 
 print.about_me <- function(x, ...) {
-  cat("My name is ", x$name, ", and I work for ", x$works_for, ".", sep = "")
-  cat("My favourite food is", x$favourite_food, "\n")
+  cat("My name is ", x$name, ", and I work for ", x$works_for, ". ",
+      "My favourite food is", x$favourite_food, "\n", sep = "")
 }
 
-my_data
+print(my_data)
 ```
 ]
 
@@ -329,7 +329,7 @@ print.my_penguins <- function(x, ...) {
   NextMethod() # now call the normal tibble print method
 }
 
-my_penguins
+print(my_penguins)
 ```
 ]
 ]
