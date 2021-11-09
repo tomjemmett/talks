@@ -31,8 +31,7 @@ github_worktree_remove <- function(dir) {
   git("worktree", "remove", dir)
 }
 
-function (pkg = ".", commit_message = construct_commit_message(pkg), ...)
-{
+build_slides <- function () {
   branch <- "gh-pages"
   remote <- "origin"
   commit_message <- "Updating gh-pages"
@@ -67,3 +66,5 @@ function (pkg = ".", commit_message = construct_commit_message(pkg), ...)
   github_push(dest_dir, commit_message, remote, branch)
   invisible()
 }
+
+build_slides()
