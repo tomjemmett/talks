@@ -55,9 +55,11 @@ build_slides <- function () {
   rmds <- fs::dir_ls(glob = "*.Rmd")
   file.copy(rmds, dest_dir)
 
-  withr::with_dir(dest_dir, sapply(rmds, \(x) rmarkdown::render(x)))
+  pwd <- setwd(dest_dir)
+  sapply(rmds, \(x) rmarkdown::render(x))
   # delete the Rmd's in the dest_dir
-  fs::file_delete(file.path(dest_dir, rmds))
+  fs::file_delete(rmds)
+  setwd(pwd)
   #-----------------------------------------------------------------------------
 
   # commit and push
