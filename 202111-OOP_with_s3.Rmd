@@ -315,7 +315,7 @@ my_data <- structure(
 
 print.about_me <- function(x, ...) {
   cat("My name is ", x$name, ", and I work for ", x$works_for, ". ",
-      "My favourite food is", x$favourite_food, "\n", sep = "")
+      "My favourite food is ", x$favourite_food, "\n", sep = "")
 }
 
 print(my_data)
