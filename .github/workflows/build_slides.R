@@ -14,7 +14,7 @@ git <- function(..., echo_cmd = TRUE, echo = TRUE, error_on_status = TRUE) {
 
 github_push <- function(dir, commit_message, remote, branch) {
   force(commit_message)
-  with_dir(dir, {
+  withr::with_dir(dir, {
     git("add", "-A", ".")
     git("commit", "--allow-empty", "-m", commit_message)
     git("remote", "-v")
@@ -36,14 +36,13 @@ build_slides <- function () {
   remote <- "origin"
   commit_message <- "Updating gh-pages"
 
-  dest_dir <- fs::dir_create(fs::file_temp())
-  on.exit(fs::dir_delete(dest_dir))
+  dest_dir <- file.path(withr::local_tempdir(), "gh-pages")
 
   git("remote", "set-branches", remote, branch)
   git("fetch", remote, branch)
 
   github_worktree_add(dest_dir, remote, branch)
-  on.exit(github_worktree_remove(dest_dir), add = TRUE)
+  withr::defer(github_worktree_remove(dest_dir))
 
   #-----------------------------------------------------------------------------
   # my stuff here
@@ -55,12 +54,11 @@ build_slides <- function () {
   # find .Rmd files, copy to dest_dir and render
   rmds <- fs::dir_ls(glob = "*.Rmd")
   file.copy(rmds, dest_dir)
-
-  pwd <- setwd(dest_dir)
-  sapply(rmds, \(x) rmarkdown::render(x))
+  withr::with_dir(dest_dir, {
+    sapply(rmds, \(rmd) callr::r(rmarkdown::render, list(rmd)))
+  })
   # delete the Rmd's in the dest_dir
-  fs::file_delete(rmds)
-  setwd(pwd)
+  fs::file_delete(file.path(dest_dir, rmds))
   #-----------------------------------------------------------------------------
 
   # commit and push
