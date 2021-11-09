@@ -29,4 +29,4 @@ jobs:
         run: |
           git config --local user.name "Tom Jemmett"
           git config --local user.email "tom.jemmett@gmail.com"
-          Rscript build_slides.R
+          Rscript .github/workflows/build_slides.R
