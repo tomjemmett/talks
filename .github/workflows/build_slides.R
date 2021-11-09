@@ -36,13 +36,14 @@ build_slides <- function () {
   remote <- "origin"
   commit_message <- "Updating gh-pages"
 
-  dest_dir <- file.path(withr::local_tempdir(), "gh-pages")
+  dest_dir <- fs::dir_create(fs::file_temp())
+  on.exit(fs::dir_delete(dest_dir))
 
   git("remote", "set-branches", remote, branch)
   git("fetch", remote, branch)
 
   github_worktree_add(dest_dir, remote, branch)
-  withr::defer(github_worktree_remove(dest_dir))
+  on.exit(github_worktree_remove(dest_dir), add = TRUE)
 
   #-----------------------------------------------------------------------------
   # my stuff here
