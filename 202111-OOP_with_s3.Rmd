@@ -48,7 +48,9 @@ xaringanExtra::use_broadcast()
 ```
 
 ```{r icons, include=FALSE}
-icons::download_fontawesome()
+if (!dir.exists(file.path(rappdirs::user_data_dir("rpkg_icon"), "fontawesome"))) {
+  icons::download_fontawesome()
+}
 ic <- list()
 ic$em <- icons::icon_find("envelope")[1]
 ic$de <- icons::icon_find("desktop")
@@ -70,17 +72,17 @@ class: title-slide, left, bottom
 # About The Strategy Unit / Me
 
 .pull-left[
-"Leading research, analysis and change from within the NHS"
+***"Leading research, analysis and change from within the NHS"***
 
-The Strategy Unit is a specialist NHS team, based in Midlands and Lancashire Commissioning Support Unit. We focus on
-the application of high-quality, multi-disciplinary analytical work.
+**The Strategy Unit** is a specialist **NHS** team, based in [**Midlands and Lancashire CSU**][mlcsu]. We focus on the
+application of high-quality, multi-disciplinary analytical work.
 
 Our team comes from diverse backgrounds. Our academic qualifications include maths, economics, history, natural
 sciences, medicine, sociology, business and management, psychology and political science. Our career and personal
 histories are just as varied.
 
-Our staff are NHS employees, animated by NHS values. The Strategy Unit covers all its costs through project funding.
-But this is driven by need, not what we can sell. Any surplus is recycled for public benefit.
+Our staff are **NHS** employees, animated by **NHS** values. **The Strategy Unit** covers all its costs through project
+funding. But this is driven by need, not what we can sell. Any surplus is recycled for public benefit.
 
 [`r ic$de`][su_web] | [`r ic$em`][su_email] | [`r ic$tw`][su_twitter] | [`r ic$gh`][su_github] |
 [`r ic$li`][su_linkedin]
@@ -383,6 +385,8 @@ for the [`{NHSRtheme}`][nhsrtheme] package.
 [su_twitter]: https://twitter.com/strategy_unit
 [su_github]: https://github.com/The-Strategy-Unit/
 [su_linkedin]: https://www.linkedin.com/company/the-strategy-unit/
+
+[mlcsu]: https://www.midlandsandlancashirecsu.nhs.uk/
 
 [open_uni]: https://www.open.ac.uk/
 [bcs]: https://www.bcs.org/
