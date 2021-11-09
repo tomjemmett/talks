@@ -28,7 +28,7 @@ github_worktree_add <- function(dir, remote, branch) {
 }
 
 github_worktree_remove <- function(dir) {
-  git("worktree", "remove", dir)
+  git("worktree", "remove", dir, "--force")
 }
 
 build_slides <- function () {

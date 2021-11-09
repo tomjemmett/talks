@@ -41,12 +41,15 @@ knitr::opts_chunk$set(
 # scale_colour_continuous <- partial(scale_colour_nhs, discrete = FALSE)
 # scale_colour_discrete <- partial(scale_colour_nhs, discrete = TRUE)
 
+# get icons
 ic <- list()
-ic$em <- icons::icon_find("envelope")[1]
+ic$em <- icons::icon_find("envelope")
 ic$de <- icons::icon_find("desktop")
 ic$gh <- icons::icon_find("github")
 ic$tw <- icons::icon_find("twitter")
 ic$li <- icons::icon_find("linkedin")
+# select just the first returned icon if more than one was returned
+ic <- lapply(ic, \(i) if(length(i) > 1) i[[1]] else i)
 
 xaringanExtra::use_tile_view()
 xaringanExtra::use_animate_all("fade")
