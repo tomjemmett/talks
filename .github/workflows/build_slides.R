@@ -55,7 +55,7 @@ build_slides <- function () {
   rmds <- fs::dir_ls(glob = "*.Rmd")
   file.copy(rmds, dest_dir)
   withr::with_dir(dest_dir, {
-    sapply(rmds, \(rmd) callr::r(rmarkdown::render, list(rmd)))
+    sapply(rmds, \(rmd) callr::r(\(x) rmarkdown::render(x), list(rmd)))
   })
   # delete the Rmd's in the dest_dir
   fs::file_delete(file.path(dest_dir, rmds))
