@@ -51,8 +51,6 @@ build_slides <- function () {
   file.copy("css", dest_dir, recursive = TRUE)
   file.copy("img", dest_dir, recursive = TRUE)
   file.copy("libs", dest_dir, recursive = TRUE)
-  # copy any .rds files
-  file.copy(fs::dir_ls(glob =  "*.rds"), dest_dir)
   # find .Rmd files, copy to dest_dir and render
   rmds <- fs::dir_ls(glob = "*.Rmd")
   file.copy(rmds, dest_dir)

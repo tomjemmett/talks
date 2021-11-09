@@ -48,8 +48,13 @@ xaringanExtra::use_broadcast()
 ```
 
 ```{r icons, include=FALSE}
-# icons: for some reason creating this fails on github actions, so build locally
-ic <- readRDS("icons.rds")
+icons::download_fontawesome()
+ic <- list()
+ic$em <- icons::icon_find("envelope")[1]
+ic$de <- icons::icon_find("desktop")
+ic$gh <- icons::icon_find("github")
+ic$tw <- icons::icon_find("twitter")
+ic$li <- icons::icon_find("linkedin")
 ```
 
 class: title-slide, left, bottom
