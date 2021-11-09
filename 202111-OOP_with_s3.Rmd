@@ -42,7 +42,7 @@ knitr::opts_chunk$set(
 # scale_colour_discrete <- partial(scale_colour_nhs, discrete = TRUE)
 
 ic <- list()
-ic$em <- icons::icon_find("envelope")[[1]]
+ic$em <- icons::icon_find("envelope")[1]
 ic$de <- icons::icon_find("desktop")
 ic$gh <- icons::icon_find("github")
 ic$tw <- icons::icon_find("twitter")
