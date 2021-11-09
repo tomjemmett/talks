@@ -111,8 +111,8 @@ summary(my_numbers)
 ```
 
 ```
-##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## -1.52625 -0.67146 -0.15319  0.06568  0.41985  2.78509
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## -1.3532 -0.4339  0.3974  0.2850  0.8876  1.7751
 ```
 ]
 
@@ -253,7 +253,7 @@ get("summary")
 ```
 ## function (object, ...) 
 ## UseMethod("summary")
-## &lt;bytecode: 0x564acef3f5f8&gt;
+## &lt;bytecode: 0x562240ddc6d0&gt;
 ## &lt;environment: namespace:base&gt;
 ```
 
@@ -383,14 +383,14 @@ my_data &lt;- structure(
 
 print.about_me &lt;- function(x, ...) {
   cat("My name is ", x$name, ", and I work for ", x$works_for, ". ",
-      "My favourite food is", x$favourite_food, "\n", sep = "")
+      "My favourite food is ", x$favourite_food, "\n", sep = "")
 }
 
 print(my_data)
 ```
 
 ```
-## My name is Tom, and I work for The Strategy Unit. My favourite food is🍕
+## My name is Tom, and I work for The Strategy Unit. My favourite food is 🍕
 ```
 ]
 
