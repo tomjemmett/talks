@@ -24,8 +24,6 @@ jobs:
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-renv@v1
-        with:
-          cache-version: 42
 
       - name: Cache icons
         uses: actions/cache@v2
