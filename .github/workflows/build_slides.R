@@ -1,14 +1,9 @@
 dest_dir <- "public"
 dir.create(dest_dir)
-  
-# move folders we need
-file.copy("css", dest_dir, recursive = TRUE)
-file.copy("img", dest_dir, recursive = TRUE)
-file.copy("libs", dest_dir, recursive = TRUE)
 
-# find .Rmd files, copy to dest_dir and render
 rmds <- fs::dir_ls(glob = "*.Rmd")
-file.copy(rmds, dest_dir)
+stopifnot("file copy failed" = all(file.copy(c("css", "img", "libs", rmds), dest_dir, recursive = TRUE)))
+
 withr::with_dir(dest_dir, sapply(rmds, rmarkdown::render))
 
 # delete the Rmd's in the dest_dir
