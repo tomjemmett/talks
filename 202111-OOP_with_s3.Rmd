@@ -48,7 +48,7 @@ xaringanExtra::use_broadcast()
 ```
 
 ```{r icons, include=FALSE}
-print(icons:::icon_path())
+options("icon.path" = "icons")
 ic <- icons::icon_set("icons")
 ```
 
