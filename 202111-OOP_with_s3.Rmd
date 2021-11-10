@@ -48,10 +48,8 @@ xaringanExtra::use_broadcast()
 ```
 
 ```{r icons, include=FALSE}
-ic <- icons::icon_set(getOption("icon.path"))
+ic <- icons::icon_set(file.path(getOption("icon.path"), "my_icons"))
 ```
-
----
 
 class: title-slide, left, bottom
 
