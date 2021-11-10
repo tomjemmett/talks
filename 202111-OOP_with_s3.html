@@ -26,20 +26,30 @@
 
 
 
-```r
-dir.exists("icons")
-```
-
-```
-## [1] FALSE
-```
 
 ```r
-dir("icons")
+getOption("icon.path")
 ```
 
 ```
-## character(0)
+## [1] "~/icons"
+```
+
+```r
+dir.exists(getOption("icon.path"))
+```
+
+```
+## [1] TRUE
+```
+
+```r
+dir(getOption("icon.path"))
+```
+
+```
+## [1] "de.svg"      "em.svg"      "fontawesome" "gh.svg"      "li.svg"     
+## [6] "tw.svg"
 ```
 
 ---
@@ -111,8 +121,8 @@ summary(my_numbers)
 ```
 
 ```
-##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## -1.47703 -0.52499 -0.02475 -0.07649  0.43520  1.14509
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## -1.8735 -1.3339 -0.5388 -0.2282  0.6961  2.8868
 ```
 ]
 
@@ -253,7 +263,7 @@ get("summary")
 ```
 ## function (object, ...) 
 ## UseMethod("summary")
-## &lt;bytecode: 0x557b0b9b5ea8&gt;
+## &lt;bytecode: 0x564eb29a53b8&gt;
 ## &lt;environment: namespace:base&gt;
 ```
 
