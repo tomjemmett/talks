@@ -28,7 +28,7 @@ jobs:
       - name: Cache icons
         uses: actions/cache@v2
         with:
-          path: icons
+          path: ~/icons
           key: ${{ runner.os }}-${{ hashFiles('get_icons.R') }}
 
       - name: Get icons

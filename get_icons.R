@@ -1,7 +1,8 @@
 library(icons)
 
-if (!dir.exists("icons")) {
-  dir.create("icons")
+icon_path <- getOption("icon.path")
+if (!dir.exists(icon_path)) {
+  dir.create(icon_path)
 }
 
 # make sure the icons are downloaded
@@ -16,4 +17,4 @@ icon_save(list(
   gh = fontawesome$brands$github,
   tw = fontawesome$brands$twitter,
   li = fontawesome$brands$linkedin
-), "icons")
+), icon_path)
