@@ -25,6 +25,15 @@ jobs:
 
       - uses: r-lib/actions/setup-renv@v1
 
+      - name: Cache icons
+        uses: actions/cache@v2
+        with:
+          path: icons
+        key: ${{ runner.os }}-${{ hashFiles("get_icons.R") }}
+
+      - name: Get icons
+        run: Rscript get_icons.R
+
       - name: Build slides
         run: Rscript .github/workflows/build_slides.R
 

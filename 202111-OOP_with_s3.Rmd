@@ -48,15 +48,7 @@ xaringanExtra::use_broadcast()
 ```
 
 ```{r icons, include=FALSE}
-if (!dir.exists(file.path(rappdirs::user_data_dir("rpkg_icon"), "fontawesome"))) {
-  icons::download_fontawesome()
-}
-ic <- list()
-ic$em <- icons::icon_find("envelope")[1]
-ic$de <- icons::icon_find("desktop")
-ic$gh <- icons::icon_find("github")
-ic$tw <- icons::icon_find("twitter")
-ic$li <- icons::icon_find("linkedin")
+ic <- icons::icon_set("icons")
 ```
 
 class: title-slide, left, bottom
