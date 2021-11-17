@@ -13,29 +13,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: install libcurl
-        run: |
-          sudo apt install -y libcurl4-openssl-dev
-
-      - uses: r-lib/actions/setup-pandoc@v1
-
+      - uses: tomjemmett/renv-install-system-deps@v1
       - uses: r-lib/actions/setup-r@v1
-        with:
-          use-public-rspm: true
-
+      - uses: r-lib/actions/setup-pandoc@v1
       - uses: r-lib/actions/setup-renv@v1
 
-      - name: Cache icons
-        uses: actions/cache@v2
-        with:
-          path: icons
-          key: ${{ runner.os }}-${{ hashFiles('get_icons.R') }}
-
       - name: Get icons
-        run: Rscript get_icons.R
+        uses: tomjemmett/setup-r-icons@v1
+        with:
+          icon-sets: fontawesome
 
       - name: Build slides
-        run: Rscript .github/workflows/build_slides.R
+        run: make
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.5

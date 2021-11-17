@@ -48,7 +48,13 @@ xaringanExtra::use_broadcast()
 ```
 
 ```{r icons, include=FALSE}
-ic <- icons::icon_set(file.path(getOption("icon.path"), "my_icons"))
+ic <- list(
+  em = icons::fontawesome$regular$envelope,
+  de = icons::fontawesome$solid$desktop,
+  gh = icons::fontawesome$brands$github,
+  tw = icons::fontawesome$brands$twitter,
+  li = icons::fontawesome$brands$linkedin
+)
 ```
 
 class: title-slide, left, bottom
