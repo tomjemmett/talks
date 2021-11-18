@@ -14,5 +14,5 @@ Below are a list of the talks that I have given:
 fs::dir_ls(regexp = "(?<!index)\\.Rmd$", perl = TRUE) |>
   stringr::str_replace("\\.Rmd$", "") |>
   purrr::map_chr(\(.x) paste0("- [", .x, "](", .x, ".html)")) |>
-  cat(collapse = "\n")
+  cat(sep = "\n", collapse = "\n")
 ```
